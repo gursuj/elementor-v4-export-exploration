@@ -1,0 +1,857 @@
+<title>Design System Diff</title>
+<style>
+:root{
+  --bg:#f5f5f9;
+  --surface:#ffffff;
+  --surface-2:#eeeef5;
+  --ink:#1b1b24;
+  --ink-dim:#5a5a6b;
+  --line:#dcdce6;
+  --accent:#5b5fc7;
+  --accent-ink:#ffffff;
+  --safe:#1a8f5e;
+  --safe-bg:#e3f6ec;
+  --collide:#c8402a;
+  --collide-bg:#fbe8e4;
+  --risk:#a6720b;
+  --risk-bg:#faf0d9;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131319;
+    --surface:#1b1b24;
+    --surface-2:#23232e;
+    --ink:#eaeaf2;
+    --ink-dim:#9a9aae;
+    --line:#33333f;
+    --accent:#8b8fe8;
+    --accent-ink:#131319;
+    --safe:#4fd393;
+    --safe-bg:#123424;
+    --collide:#f2836d;
+    --collide-bg:#3a1a15;
+    --risk:#e0b348;
+    --risk-bg:#3a2f10;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131319;
+  --surface:#1b1b24;
+  --surface-2:#23232e;
+  --ink:#eaeaf2;
+  --ink-dim:#9a9aae;
+  --line:#33333f;
+  --accent:#8b8fe8;
+  --accent-ink:#131319;
+  --safe:#4fd393;
+  --safe-bg:#123424;
+  --collide:#f2836d;
+  --collide-bg:#3a1a15;
+  --risk:#e0b348;
+  --risk-bg:#3a2f10;
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  padding-inline:20px;
+  padding-block:32px 64px;
+  max-width:1040px;
+  margin-inline:auto;
+}
+h1,h2,h3{text-wrap:balance;}
+h1{font-size:1.7rem;font-weight:800;letter-spacing:-0.01em;margin:0 0 4px;}
+.tagline{color:var(--ink-dim);font-size:0.95rem;margin:0 0 28px;max-width:60ch;}
+.steps{margin:0 0 20px;padding-left:22px;font-size:0.95rem;line-height:1.6;max-width:64ch;}
+.steps li{margin-bottom:4px;}
+.steps code, .legend code, .sub code{font-family:var(--mono);font-size:0.85em;background:var(--surface-2);padding:0.1em 0.4em;border-radius:4px;}
+.legend{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:24px;max-width:64ch;}
+.legend-title{font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700;margin-bottom:8px;}
+.legend ul{list-style:none;margin:0;padding:0;font-size:0.9rem;line-height:1.5;}
+.legend li{margin-bottom:8px;}
+.legend li:last-child{margin-bottom:0;}
+.legend abbr{text-decoration:underline dotted;cursor:help;}
+.tagline code, .cell-id, code.opt{font-family:var(--mono);font-size:0.85em;background:var(--surface-2);padding:0.1em 0.4em;border-radius:4px;}
+
+.dropzones{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.dropzone{
+  flex:1 1 260px;
+  background:var(--surface);
+  border:1.5px dashed var(--line);
+  border-radius:12px;
+  padding:18px;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.dropzone:hover, .dropzone.drag{border-color:var(--accent);background:var(--surface-2);}
+.dropzone input{display:none;}
+.dz-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700;margin-bottom:6px;}
+.dz-file{font-weight:700;font-size:0.98rem;}
+.dz-hint{color:var(--ink-dim);font-size:0.85rem;margin-top:4px;}
+.dz-count{font-family:var(--mono);font-size:0.78rem;color:var(--accent);margin-top:8px;}
+
+.example-banner{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+  padding:10px 14px;margin-bottom:28px;font-size:0.85rem;color:var(--ink-dim);
+}
+.example-banner strong{color:var(--ink);}
+.example-banner button{
+  margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);
+  border-radius:7px;padding:5px 10px;font:inherit;font-size:0.8rem;cursor:pointer;
+}
+.example-banner button:hover{border-color:var(--accent);color:var(--accent);}
+
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
+.stat{
+  flex:1 1 140px;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;
+}
+.stat .n{font-family:var(--mono);font-size:1.6rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+.stat .l{font-size:0.78rem;color:var(--ink-dim);margin-top:4px;}
+.stat.collide .n{color:var(--collide);}
+.stat.risk .n{color:var(--risk);}
+.stat.safe .n{color:var(--safe);}
+
+section.group{margin-bottom:30px;}
+section.group h2{font-size:1.02rem;font-weight:800;margin:0 0 2px;}
+section.group .sub{color:var(--ink-dim);font-size:0.85rem;margin:0 0 12px;}
+
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+th{
+  text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-dim);
+  background:var(--surface-2);padding:9px 12px;font-weight:700;
+}
+td{padding:10px 12px;border-top:1px solid var(--line);font-size:0.9rem;vertical-align:top;}
+tr:hover td{background:var(--surface-2);}
+.label-cell{font-weight:700;}
+.ref-list{font-size:0.8rem;color:var(--ink-dim);}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;font-size:0.76rem;font-weight:700;
+  padding:3px 9px;border-radius:999px;white-space:nowrap;
+}
+.pill.collide{background:var(--collide-bg);color:var(--collide);}
+.pill.risk{background:var(--risk-bg);color:var(--risk);}
+.pill.diff{background:var(--risk-bg);color:var(--risk);}
+.pill.safe{background:var(--safe-bg);color:var(--safe);}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+.note{font-size:0.8rem;color:var(--ink-dim);margin-top:6px;}
+.empty{color:var(--ink-dim);font-size:0.88rem;padding:16px;text-align:center;}
+
+.status-cell{display:flex;flex-direction:column;align-items:flex-start;gap:6px;}
+.sol-btn{
+  font:inherit;font-size:0.75rem;font-weight:700;color:var(--accent);background:none;
+  border:1px solid var(--line);border-radius:7px;padding:3px 9px;cursor:pointer;
+}
+.sol-btn:hover{border-color:var(--accent);background:var(--surface-2);}
+
+.diff-block{width:100%;}
+.status-cell > * + .diff-block{border-top:1px dashed var(--line);padding-top:8px;}
+.diff-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.diff-list{margin:6px 0 6px;padding-left:18px;font-size:0.82rem;color:var(--ink-dim);}
+.diff-list li{margin-bottom:3px;}
+.diff-list .cell-id{margin-inline:2px;}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid var(--line);vertical-align:-1px;margin-right:4px;}
+
+dialog#solution-dialog{
+  border:none;border-radius:14px;padding:0;max-width:480px;width:90vw;
+  background:var(--surface);color:var(--ink);
+}
+dialog#solution-dialog::backdrop{background:rgba(0,0,0,.45);}
+.sol-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:18px 20px 0;}
+.sol-head h3{margin:0;font-size:1.05rem;font-weight:800;}
+.sol-close{
+  background:none;border:none;color:var(--ink-dim);font-size:1.1rem;line-height:1;cursor:pointer;padding:2px 4px;
+}
+.sol-close:hover{color:var(--ink);}
+.sol-body{padding:12px 20px 20px;font-size:0.92rem;line-height:1.55;color:var(--ink);}
+.sol-body p{margin:0 0 10px;}
+.sol-body p:last-child{margin-bottom:0;}
+.sol-body ol{margin:0 0 12px;padding-left:20px;}
+.sol-body li{margin-bottom:6px;}
+.sol-tag{
+  display:inline-block;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--ink-dim);margin:16px 20px 4px;
+}
+
+.element-paste{
+  width:100%;min-height:110px;resize:vertical;font-family:var(--mono);font-size:0.82rem;
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;
+  padding:12px;margin-bottom:10px;
+}
+.element-paste:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.check-btn{padding:7px 14px;font-size:0.85rem;}
+.check-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.check-row .dz-hint{margin-top:0;}
+.element-paste.drag{border-color:var(--accent);background:var(--surface-2);}
+
+#element-result{margin-top:14px;}
+.match-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;
+}
+.match-card .mc-text{flex:1 1 200px;font-size:0.88rem;}
+.match-card .mc-text strong{font-family:var(--mono);font-size:0.85em;}
+.match-card.collide{border-color:var(--collide);}
+.match-card.risk{border-color:var(--risk);}
+.result-clean{
+  background:var(--safe-bg);color:var(--safe);border-radius:10px;padding:12px 14px;font-size:0.88rem;font-weight:600;
+}
+.result-error{
+  background:var(--collide-bg);color:var(--collide);border-radius:10px;padding:12px 14px;font-size:0.88rem;
+}
+
+@media (max-width:600px){
+  th:nth-child(2), td:nth-child(2){display:none;}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<h1>Design System Diff</h1>
+<p class="tagline">Check an Elementor v4 design-system import <strong>before</strong> you run it. Takes about a minute.</p>
+<ol class="steps">
+  <li>On each site, go to <code>Elementor &gt; Design System &gt; Export</code>. You get a <code>.zip</code>.</li>
+  <li>Drop the source zip and the destination zip below.</li>
+  <li>Fix anything marked red or amber, then import.</li>
+</ol>
+<div class="legend">
+  <div class="legend-title">What the warnings mean</div>
+  <ul>
+    <li><span class="pill collide">Name clash</span> Same name, different <abbr title="Elementor's hidden reference for a class or variable, like e-gv-4204356. Not a CSS id.">internal ID</abbr>. Import keeps the destination's item. Copied elements lose their styling, with no error.</li>
+    <li><span class="pill risk">Indirect risk</span> The class is fine, but it uses a variable that clashes.</li>
+    <li><span class="pill diff">Value differs</span> Same name, different values. Elementor only asks <code class="opt">Replace existing values</code> or <code class="opt">Keep existing values</code>. It never shows you what changes.</li>
+  </ul>
+</div>
+
+<div class="dropzones">
+  <label class="dropzone" id="dz-source">
+    <div class="dz-label">Source site export</div>
+    <div class="dz-file" id="dz-source-name">Drop or click to choose .zip</div>
+    <div class="dz-hint">The site you copy <em>from</em> (e.g. staging)</div>
+    <div class="dz-count" id="dz-source-count"></div>
+    <input type="file" accept=".zip" id="dz-source-input">
+  </label>
+  <label class="dropzone" id="dz-dest">
+    <div class="dz-label">Destination site export</div>
+    <div class="dz-file" id="dz-dest-name">Drop or click to choose .zip</div>
+    <div class="dz-hint">The site you import <em>into</em> (e.g. live). Export it fresh, just before.</div>
+    <div class="dz-count" id="dz-dest-count"></div>
+    <input type="file" accept=".zip" id="dz-dest-input">
+  </label>
+</div>
+
+<div class="example-banner" id="example-banner">
+  <span>Showing <strong>example data</strong> (staging &rarr; test-v4). Value checks need real exports, so drop your own zips.</span>
+  <button id="clear-example">Clear &amp; start fresh</button>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<section class="group">
+  <h2>Variables</h2>
+  <p class="sub">Colour and font variables, matched by name.</p>
+  <table id="var-table"><thead><tr><th>Name</th><th>Source internal ID</th><th>Destination internal ID</th><th>Status</th></tr></thead><tbody></tbody></table>
+</section>
+
+<section class="group">
+  <h2>Classes</h2>
+  <p class="sub">Global classes, matched by name, plus the variables they use.</p>
+  <table id="class-table"><thead><tr><th>Name</th><th>Source internal ID</th><th>Destination internal ID</th><th>Uses variables</th><th>Status</th></tr></thead><tbody></tbody></table>
+</section>
+
+<section class="group">
+  <h2>Check a broken element</h2>
+  <p class="sub">An element looks broken, or says "Some classes are missing"? Find out why.</p>
+  <ol class="steps">
+    <li>On the <strong>destination</strong> site, select the element in the editor and press Ctrl/Cmd+C.</li>
+    <li>Paste it below, or save it as a <code>.json</code> file and upload it.</li>
+    <li>Click <strong>Check this element</strong>.</li>
+  </ol>
+  <p class="sub">Copy from the destination site. A copy from the source site carries the same IDs, so it adds nothing.</p>
+  <textarea id="element-paste" class="element-paste" placeholder="Paste copied element JSON here, or drop a .json file&hellip;"></textarea>
+  <div class="check-row">
+    <button id="element-check" class="sol-btn check-btn">Check this element</button>
+    <button id="element-upload" class="sol-btn check-btn" type="button">Upload .json file</button>
+    <span class="dz-hint" id="element-file-name"></span>
+    <input type="file" accept=".json,application/json,.txt" id="element-file-input" hidden>
+  </div>
+  <div id="element-result"></div>
+</section>
+
+<dialog id="solution-dialog">
+  <div class="sol-tag" id="sol-tag"></div>
+  <div class="sol-head">
+    <h3 id="sol-title"></h3>
+    <button class="sol-close" id="sol-close" aria-label="Close">&#10005;</button>
+  </div>
+  <div class="sol-body" id="sol-body"></div>
+</dialog>
+
+<script>
+// ---------- example data (from the real staging -> test-v4 test) ----------
+const EXAMPLE = {
+  source: {
+    vars: { "e-gv-0497f33":"color-1", "e-gv-9203474":"color-2", "e-gv-aff8f49":"primary" },
+    classes: {
+      "g-43fd75b": { label:"class1", refs:["e-gv-aff8f49"] }
+    }
+  },
+  dest: {
+    vars: { "e-gv-4204356":"primary" },
+    classes: {}
+  }
+};
+
+// ---------- solutions, keyed by warning type. Edit freely. ----------
+// Each body item is either a paragraph (string) or { steps: [...] } for a numbered list.
+const OPT_REPLACE = '<code class="opt">Replace existing values</code>';
+const OPT_KEEP = '<code class="opt">Keep existing values</code>';
+const SOURCE_NOTE = '<em>Based on the Elementor 4.2.4 source (same in 4.2.2). Test on staging first.</em>';
+
+const SOLUTIONS = {
+  'var-collide': {
+    tag: 'Variable name clash',
+    title: 'Fix it in the editor. About 2 minutes per class.',
+    body: [
+      '<strong>Pick this variable again in every class that uses it.</strong>',
+      { steps: [
+        'Open <strong>Class Manager</strong>.',
+        'Edit each class that uses this variable (see the Classes table).',
+        'Pick the variable again from its dropdown. Do not retype the value.',
+        'Save.'
+      ] },
+      'One fix per class repairs every element using that class, on every page.',
+      '<strong>Next time:</strong> rename or delete this variable on the destination site <em>before</em> you import.'
+    ]
+  },
+  'class-collide': {
+    tag: 'Class name clash',
+    title: 'Fix it in the editor. About 1 minute per element.',
+    body: [
+      '<strong>Re-add the class on each element copied from the source site.</strong>',
+      { steps: [
+        'Select the element in the editor.',
+        'Remove the broken class chip.',
+        'Add the class with the same name from the picker.'
+      ] },
+      'Only elements copied from the source site are affected. Elements built on the destination site are fine.',
+      '<strong>Next time:</strong> rename or delete this class on the destination site <em>before</em> you import.'
+    ]
+  },
+  'var-value': {
+    tag: 'Value differs',
+    title: 'Decide before you import',
+    body: [
+      '<strong>Work out which value is correct, then pick the matching import option.</strong>',
+      { steps: [
+        'Compare the two values in the table.',
+        `Source value is right: choose ${OPT_REPLACE}. The destination variable takes the source value, and everything using it changes.`,
+        `Destination value is right: choose ${OPT_KEEP}. The source value is ignored.`
+      ] },
+      `${OPT_REPLACE} only updates the value, and only if both variables are the same type. If the types differ, Elementor adds a new variable with a renamed label instead.`,
+      'This is a warning, not an error. The difference may be on purpose.',
+      SOURCE_NOTE
+    ]
+  },
+  'class-value': {
+    tag: 'Value differs',
+    title: 'Decide before you import',
+    body: [
+      '<strong>Work out which version of the class is correct, then pick the matching import option.</strong>',
+      { steps: [
+        'Compare the settings listed under the warning.',
+        `Source version is right: choose ${OPT_REPLACE}. The whole destination class is swapped, and every element using it changes.`,
+        `Destination version is right: choose ${OPT_KEEP}. The destination class stays as it is.`
+      ] },
+      '"not set" on the source side means only the destination has that setting. Replacing removes it.',
+      'This is a warning, not an error. The difference may be on purpose.',
+      SOURCE_NOTE
+    ]
+  },
+  'class-risk': {
+    tag: 'Indirect risk',
+    title: 'Fix the variable first',
+    body: [
+      '<strong>Fix the clashing variable and this class is fixed too.</strong>',
+      { steps: [
+        'Find the variable named in the note (see the Variables table).',
+        'Click its Solution and follow the steps.',
+        'Still wrong? Edit this class in Class Manager and pick the variable again.'
+      ] }
+    ]
+  }
+};
+
+function openSolution(kind){
+  const s = SOLUTIONS[kind];
+  if (!s) return;
+  document.getElementById('sol-tag').textContent = s.tag;
+  document.getElementById('sol-title').textContent = s.title;
+  document.getElementById('sol-body').innerHTML = s.body.map(p =>
+    typeof p === 'string' ? `<p>${p}</p>` : `<ol>${p.steps.map(i => `<li>${i}</li>`).join('')}</ol>`
+  ).join('');
+  document.getElementById('solution-dialog').showModal();
+}
+
+document.getElementById('sol-close').addEventListener('click', () => {
+  document.getElementById('solution-dialog').close();
+});
+document.getElementById('solution-dialog').addEventListener('click', (e) => {
+  if (e.target.id === 'solution-dialog') document.getElementById('solution-dialog').close();
+});
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.sol-btn');
+  if (btn) openSolution(btn.dataset.kind);
+});
+
+let state = { source:null, dest:null, isExample:true };
+let lastVarRows = [];
+let lastClassRows = [];
+
+function computeAndRender(){
+  const source = state.source || EXAMPLE.source;
+  const dest = state.dest || EXAMPLE.dest;
+
+  // label -> id maps
+  const srcVarByLabel = invert(source.vars);
+  const destVarByLabel = invert(dest.vars);
+  const srcClassByLabel = {};
+  Object.entries(source.classes).forEach(([id,c]) => srcClassByLabel[c.label] = id);
+  const destClassByLabel = {};
+  Object.entries(dest.classes).forEach(([id,c]) => destClassByLabel[c.label] = id);
+
+  // variable diff
+  const varRows = [];
+  const collidedVarLabels = new Set();
+  // Value checks need the style data from a real export; the built-in example has none.
+  const canCompare = !!(source.varVals && dest.varVals);
+
+  Object.entries(srcVarByLabel).forEach(([label, srcId]) => {
+    const destId = destVarByLabel[label];
+    let row;
+    if (destId === undefined){
+      row = {label, srcId, destId:"—", status:"safe", note:"New. Will be added on import."};
+    } else if (destId === srcId){
+      row = {label, srcId, destId, status:"safe", note:"Same on both sites."};
+    } else {
+      collidedVarLabels.add(label);
+      row = {label, srcId, destId, status:"collide", kind:"var-collide", note:"Import keeps the destination's version. Anything copied from the source site loses this variable."};
+    }
+
+    row.diffKind = 'var-value';
+    row.valueDiffs = [];
+    if (canCompare && destId !== undefined){
+      const s = source.varVals[srcId], d = dest.varVals[destId];
+      if (s && d){
+        if (valText(s.value) !== valText(d.value)) row.valueDiffs.push({what:'value', src:valText(s.value), dest:valText(d.value)});
+        if (s.type !== d.type) row.valueDiffs.push({what:'type', src:s.type, dest:d.type});
+      }
+    }
+    // Don't show a reassuring "Safe" pill next to a value warning.
+    if (row.valueDiffs.length && row.status === 'safe') row.status = 'diff';
+    varRows.push(row);
+  });
+
+  // class diff (+ transitive var risk)
+  const classRows = [];
+  Object.entries(source.classes).forEach(([srcId, c]) => {
+    const destId = destClassByLabel[c.label];
+    const refLabels = (c.refs||[]).map(refId => source.vars[refId] || refId);
+    const riskyRefs = refLabels.filter(l => collidedVarLabels.has(l));
+
+    let status, note, kind;
+    if (destId === undefined){
+      status = riskyRefs.length ? "risk" : "safe";
+      kind = riskyRefs.length ? "class-risk" : null;
+      note = riskyRefs.length
+        ? `New class, but it uses the clashing variable "${riskyRefs.join(', ')}".`
+        : "New. Will be added on import.";
+    } else if (destId === srcId){
+      status = riskyRefs.length ? "risk" : "safe";
+      kind = riskyRefs.length ? "class-risk" : null;
+      note = riskyRefs.length ? `Same on both sites, but it uses the clashing variable "${riskyRefs.join(', ')}".` : "Same on both sites.";
+    } else {
+      status = "collide";
+      kind = "class-collide";
+      note = "Import keeps the destination's version. Elements copied from the source site lose this class.";
+    }
+    // Compare the actual styles (not ids) of same-named classes. A class that uses the
+    // same variable on both sides compares equal here; the variable's own value is
+    // reported in the Variables table instead of twice.
+    let valueDiffs = [];
+    const destClass = destId === undefined ? null : dest.classes[destId];
+    if (canCompare && destClass && c.variants && destClass.variants){
+      valueDiffs = diffStyles(
+        classStyleMap(c, varNameIn(source)),
+        classStyleMap(destClass, varNameIn(dest))
+      );
+    }
+    if (valueDiffs.length && status === 'safe') status = 'diff';
+
+    classRows.push({label:c.label, srcId, destId: destId===undefined?"—":destId, refs:refLabels, status, kind, note, valueDiffs, diffKind:'class-value'});
+  });
+
+  renderStats(varRows, classRows);
+  renderVarTable(varRows);
+  renderClassTable(classRows);
+  document.getElementById('example-banner').style.display = state.isExample ? 'flex' : 'none';
+
+  // keep the latest rows around for the broken-element cross-check
+  lastVarRows = varRows;
+  lastClassRows = classRows;
+  document.getElementById('element-result').innerHTML = '';
+}
+
+function invert(idToLabel){
+  const out = {};
+  Object.entries(idToLabel).forEach(([id,label]) => out[label] = id);
+  return out;
+}
+
+// ---------- style value comparison ----------
+// Turn a stored value into a short comparable string. Hex colours are lower-cased so
+// #9B4369 and #9b4369 don't show up as a difference.
+function valText(v){
+  if (v === undefined || v === null || v === '') return undefined;
+  if (typeof v === 'object') return JSON.stringify(v);
+  const s = String(v);
+  return /^#[0-9a-f]{3,8}$/i.test(s) ? s.toLowerCase() : s;
+}
+
+// Flatten one style prop into "path -> readable value" pairs. Variables are shown by
+// name (not internal ID) so two sites using different IDs for the same variable
+// don't look like a style change.
+function flattenProps(node, path, out, varName){
+  if (node === undefined || node === null || node === '') return;
+  if (Array.isArray(node)){
+    if (node.length) out[path] = JSON.stringify(node);
+    return;
+  }
+  if (typeof node === 'object'){
+    if (typeof node.$$type === 'string'){
+      if (node.$$type.endsWith('variable') && typeof node.value === 'string'){
+        out[path] = `variable: ${varName(node.value) || node.value}`;
+        return;
+      }
+      if (node.$$type === 'size' && node.value && typeof node.value === 'object' && 'size' in node.value){
+        out[path] = `${node.value.size}${node.value.unit || ''}`;
+        return;
+      }
+      return flattenProps(node.value, path, out, varName);
+    }
+    for (const [k, v] of Object.entries(node)) flattenProps(v, path ? `${path}.${k}` : k, out, varName);
+    return;
+  }
+  out[path] = valText(node);
+}
+
+// One entry per style setting, keyed by where it applies (breakpoint / state) and its name.
+function classStyleMap(cls, varName){
+  const out = {};
+  for (const variant of (cls.variants || [])){
+    const meta = variant.meta || {};
+    const where = (meta.breakpoint || 'desktop') + (meta.state ? ` / ${meta.state}` : '');
+    const flat = {};
+    flattenProps(variant.props || {}, '', flat, varName);
+    if (variant.custom_css) flattenProps(variant.custom_css, 'custom_css', flat, varName);
+    for (const [prop, val] of Object.entries(flat)){
+      out[where === 'desktop' ? prop : `${where} · ${prop}`] = val;
+    }
+  }
+  return out;
+}
+
+function diffStyles(srcMap, destMap){
+  const diffs = [];
+  new Set([...Object.keys(srcMap), ...Object.keys(destMap)]).forEach(key => {
+    if (srcMap[key] !== destMap[key]) diffs.push({ what:key, src:srcMap[key], dest:destMap[key] });
+  });
+  return diffs;
+}
+
+// Look up a variable's name on one site. Soft-deleted variables are tagged, since a class
+// still pointing at one is a real difference worth seeing.
+function varNameIn(site){
+  return id => {
+    const name = site.vars[id];
+    return name && site.varVals[id] && site.varVals[id].deleted ? `${name} (deleted)` : name;
+  };
+}
+
+function short(s, max = 60){ s = String(s); return s.length > max ? s.slice(0, max - 1) + '…' : s; }
+
+function valHtml(v){
+  if (v === undefined) return '<em>not set</em>';
+  const swatch = /^#[0-9a-f]{3,8}$/i.test(v) ? `<span class="swatch" style="background:${v}"></span>` : '';
+  return `${swatch}<code class="cell-id">${esc(short(v))}</code>`;
+}
+
+function pill(status){
+  const map = { collide:['collide','Name clash'], risk:['risk','Indirect risk'], diff:['diff','Value differs'], safe:['safe','Safe'] };
+  const [cls,text] = map[status];
+  return `<span class="pill ${cls}">${text}</span>`;
+}
+
+function diffBlock(row){
+  if (!row.valueDiffs || !row.valueDiffs.length) return '';
+  const items = row.valueDiffs.map(d =>
+    `<li><strong>${esc(d.what)}</strong>: source ${valHtml(d.src)} · destination ${valHtml(d.dest)}</li>`
+  ).join('');
+  return `<div class="diff-block">
+    <div class="diff-head"><span class="pill diff">Value differs</span><button class="sol-btn" data-kind="${row.diffKind}">Solution</button></div>
+    <div class="note">Same name, different values. Not an error. Decide which is right before you import.</div>
+    <ul class="diff-list">${items}</ul>
+  </div>`;
+}
+
+function statusCell(row){
+  let main = '';
+  // A "Value differs" row has nothing else to say, so skip the main pill and note.
+  if (row.status !== 'diff'){
+    const btn = row.kind ? `<button class="sol-btn" data-kind="${row.kind}">Solution</button>` : '';
+    main = `${pill(row.status)}${btn}<div class="note">${esc(row.note)}</div>`;
+  }
+  return `<div class="status-cell">${main}${diffBlock(row)}</div>`;
+}
+
+function renderStats(varRows, classRows){
+  const all = [...varRows, ...classRows];
+  const count = s => all.filter(r=>r.status===s).length;
+  const valueDiffs = all.filter(r => r.valueDiffs && r.valueDiffs.length).length;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat collide"><div class="n">${count('collide')}</div><div class="l">Name clashes</div></div>
+    <div class="stat risk"><div class="n">${count('risk')}</div><div class="l">Indirect risk</div></div>
+    <div class="stat risk"><div class="n">${valueDiffs}</div><div class="l">Value differences</div></div>
+    <div class="stat safe"><div class="n">${count('safe')}</div><div class="l">Safe to import</div></div>
+  `;
+}
+
+function renderVarTable(rows){
+  const tbody = document.querySelector('#var-table tbody');
+  if (!rows.length){ tbody.innerHTML = `<tr><td colspan="4" class="empty">No variables found in source export.</td></tr>`; return; }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="label-cell">${esc(r.label)}</td>
+      <td class="cell-id">${esc(r.srcId)}</td>
+      <td class="cell-id">${esc(r.destId)}</td>
+      <td>${statusCell(r)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderClassTable(rows){
+  const tbody = document.querySelector('#class-table tbody');
+  if (!rows.length){ tbody.innerHTML = `<tr><td colspan="5" class="empty">No classes found in source export.</td></tr>`; return; }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="label-cell">${esc(r.label)}</td>
+      <td class="cell-id">${esc(r.srcId)}</td>
+      <td class="cell-id">${esc(r.destId)}</td>
+      <td class="ref-list">${r.refs.length ? r.refs.map(esc).join(', ') : '—'}</td>
+      <td>${statusCell(r)}</td>
+    </tr>
+  `).join('');
+}
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ---------- zip parsing ----------
+async function parseExport(file){
+  const zip = await JSZip.loadAsync(file);
+  const vars = {};
+  const varVals = {};
+  const classes = {};
+
+  const varsEntry = zip.file('global-variables.json');
+  if (varsEntry){
+    const json = JSON.parse(await varsEntry.async('string'));
+    Object.entries(json.data || {}).forEach(([id, v]) => {
+      vars[id] = v.label;
+      varVals[id] = { type: v.type, value: v.value, deleted: !!v.deleted_at };
+    });
+  }
+
+  const orderEntry = zip.file('global-classes/order.json');
+  if (orderEntry){
+    const order = JSON.parse(await orderEntry.async('string'));
+    for (const entry of order){
+      const fileEntry = zip.file(`global-classes/${entry.id}.json`);
+      let refs = [];
+      let variants;
+      if (fileEntry){
+        const classJson = JSON.parse(await fileEntry.async('string'));
+        refs = collectVariableRefs(classJson);
+        variants = classJson.variants || [];
+      }
+      classes[entry.id] = { label: entry.label, refs, variants };
+    }
+  }
+
+  return { vars, varVals, classes };
+}
+
+function collectVariableRefs(node, acc = []){
+  if (node && typeof node === 'object'){
+    if (typeof node.$$type === 'string' && node.$$type.endsWith('variable') && typeof node.value === 'string'){
+      acc.push(node.value);
+      return acc;
+    }
+    for (const v of Object.values(node)) collectVariableRefs(v, acc);
+  }
+  return acc;
+}
+
+// ---------- dropzone wiring ----------
+function wireDropzone(id, key){
+  const el = document.getElementById(id);
+  const input = document.getElementById(id + '-input');
+  const nameEl = document.getElementById(id + '-name');
+  const countEl = document.getElementById(id + '-count');
+
+  const handle = async (file) => {
+    if (!file) return;
+    nameEl.textContent = file.name;
+    try {
+      const parsed = await parseExport(file);
+      state[key] = parsed;
+      state.isExample = false;
+      countEl.textContent = `${Object.keys(parsed.vars).length} variables · ${Object.keys(parsed.classes).length} classes`;
+      computeAndRender();
+    } catch(e){
+      countEl.textContent = 'Could not read this zip. Is it a design-system export?';
+    }
+  };
+
+  el.addEventListener('click', (e) => { if (e.target.tagName !== 'INPUT') input.click(); });
+  input.addEventListener('change', () => handle(input.files[0]));
+  el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('drag'); });
+  el.addEventListener('dragleave', () => el.classList.remove('drag'));
+  el.addEventListener('drop', (e) => {
+    e.preventDefault(); el.classList.remove('drag');
+    handle(e.dataTransfer.files[0]);
+  });
+}
+
+wireDropzone('dz-source', 'source');
+wireDropzone('dz-dest', 'dest');
+
+document.getElementById('clear-example').addEventListener('click', () => {
+  state = { source:null, dest:null, isExample:false };
+  document.getElementById('dz-source-name').textContent = 'Drop or click to choose .zip';
+  document.getElementById('dz-dest-name').textContent = 'Drop or click to choose .zip';
+  document.getElementById('dz-source-count').textContent = '';
+  document.getElementById('dz-dest-count').textContent = '';
+  document.getElementById('var-table').querySelector('tbody').innerHTML = '<tr><td colspan="4" class="empty">Drop a source export to begin.</td></tr>';
+  document.getElementById('class-table').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="empty">Drop a source export to begin.</td></tr>';
+  document.getElementById('stats').innerHTML = '';
+  document.getElementById('example-banner').style.display = 'none';
+});
+
+// ---------- broken-element cross-check ----------
+function collectElementIds(node, acc = { classIds: new Set(), varIds: new Set() }){
+  const nodes = Array.isArray(node) ? node : [node];
+  for (const n of nodes){
+    if (!n || typeof n !== 'object') continue;
+    const classes = n.settings && n.settings.classes && n.settings.classes.value;
+    if (Array.isArray(classes)) classes.forEach(id => acc.classIds.add(id));
+    if (n.styles) collectVariableRefs(n.styles).forEach(id => acc.varIds.add(id));
+    if (Array.isArray(n.elements)) collectElementIds(n.elements, acc);
+  }
+  return acc;
+}
+
+// Load a .json file into the textarea and check it straight away, so upload
+// behaves the same as paste + click without an extra step.
+async function loadElementFile(file){
+  if (!file) return;
+  document.getElementById('element-file-name').textContent = file.name;
+  document.getElementById('element-paste').value = await file.text();
+  runElementCheck();
+}
+
+const elementFileInput = document.getElementById('element-file-input');
+document.getElementById('element-upload').addEventListener('click', () => elementFileInput.click());
+elementFileInput.addEventListener('change', () => {
+  loadElementFile(elementFileInput.files[0]);
+  elementFileInput.value = ''; // lets the same file be picked again after edits
+});
+
+const elementPaste = document.getElementById('element-paste');
+elementPaste.addEventListener('dragover', (e) => { e.preventDefault(); elementPaste.classList.add('drag'); });
+elementPaste.addEventListener('dragleave', () => elementPaste.classList.remove('drag'));
+elementPaste.addEventListener('drop', (e) => {
+  e.preventDefault(); elementPaste.classList.remove('drag');
+  loadElementFile(e.dataTransfer.files[0]);
+});
+
+document.getElementById('element-check').addEventListener('click', runElementCheck);
+
+function runElementCheck(){
+  const raw = document.getElementById('element-paste').value.trim();
+  const resultEl = document.getElementById('element-result');
+  if (!raw){ resultEl.innerHTML = ''; return; }
+
+  let parsed;
+  try { parsed = JSON.parse(raw); }
+  catch(e){ resultEl.innerHTML = `<div class="result-error">That isn't valid JSON. Copy the element in the editor (Ctrl/Cmd+C) and paste the raw text.</div>`; return; }
+
+  const { classIds, varIds } = collectElementIds(parsed);
+  const matches = [];
+
+  const isClash = r => r.status === 'collide' || r.status === 'risk';
+
+  lastClassRows.forEach(r => {
+    if (isClash(r) && classIds.has(r.srcId)){
+      matches.push({ kind:r.kind, text: `Uses class <strong>${esc(r.label)}</strong> (internal ID <strong>${esc(r.srcId)}</strong>). ${esc(r.note)}`, status:r.status });
+    }
+  });
+  lastVarRows.forEach(r => {
+    if (isClash(r) && varIds.has(r.srcId)){
+      matches.push({ kind:r.kind, text: `Uses variable <strong>${esc(r.label)}</strong> (internal ID <strong>${esc(r.srcId)}</strong>). ${esc(r.note)}`, status:r.status });
+    }
+  });
+
+  // Value differences: the element may carry either site's internal ID (copied from the
+  // source or the destination), so match on both.
+  const valueMatches = [];
+  const addValueMatch = (what, r) => {
+    const changes = r.valueDiffs.map(d =>
+      `<li><strong>${esc(d.what)}</strong>: ${d.dest === undefined ? '<em>not set</em>' : esc(short(d.dest))} &rarr; ${d.src === undefined ? '<em>not set</em>' : esc(short(d.src))}</li>`
+    ).join('');
+    valueMatches.push({
+      kind: r.diffKind,
+      status: 'risk',
+      text: `Uses ${what} <strong>${esc(r.label)}</strong>. Its values differ between the two sites.
+        <br><code class="opt">Replace existing values</code>: this element changes (now &rarr; after import).
+        <ul class="diff-list">${changes}</ul>
+        <code class="opt">Keep existing values</code>: this element stays as it is.`
+    });
+  };
+  lastClassRows.forEach(r => {
+    if (r.valueDiffs.length && (classIds.has(r.srcId) || classIds.has(r.destId))) addValueMatch('class', r);
+  });
+  lastVarRows.forEach(r => {
+    if (r.valueDiffs.length && (varIds.has(r.srcId) || varIds.has(r.destId))) addValueMatch('variable', r);
+  });
+  matches.push(...valueMatches);
+
+  if (!matches.length){
+    resultEl.innerHTML = `<div class="result-clean">No name clash or value difference found for this element. Still broken? Check that its class or variable is in both exports.</div>`;
+    return;
+  }
+
+  resultEl.innerHTML = matches.map(m => `
+    <div class="match-card ${m.status}">
+      <div class="mc-text">${m.text}</div>
+      <button class="sol-btn" data-kind="${m.kind}">Solution</button>
+    </div>
+  `).join('');
+}
+
+computeAndRender();
+</script>
