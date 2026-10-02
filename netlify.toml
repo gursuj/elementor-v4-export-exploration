@@ -1,0 +1,12 @@
+# Static site, no framework. Only the two public files get copied into dist,
+# so the demo data, screenshots and notes in this repo are never served.
+[build]
+  command = "mkdir -p dist && cp design-system-diff.html dist/index.html && cp AGENTS.md dist/agents.md"
+  publish = "dist"
+
+# Serve agents.md as plain text. Without this the browser may offer to
+# download it, and agents fetching the URL get a less predictable response.
+[[headers]]
+  for = "/agents.md"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"

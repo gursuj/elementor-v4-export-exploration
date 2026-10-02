@@ -63,7 +63,7 @@ Do not try to build the export yourself. The built-in WP-CLI export (`wp element
 
 ## Step 2: run the differ
 
-Open the differ: `<DIFFER_URL>` (page hosted from `design-system-diff.html` in this repo).
+Open the differ: https://elementor-v4-design-diff.netlify.app (page hosted from `design-system-diff.html` in this repo). This guide is served at https://elementor-v4-design-diff.netlify.app/agents.md.
 
 1. Drop the source export on the left and the destination export on the right.
 2. Read the three warning types:
