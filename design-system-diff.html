@@ -69,11 +69,27 @@ h1{font-size:1.7rem;font-weight:800;letter-spacing:-0.01em;margin:0 0 4px;}
 .steps li{margin-bottom:4px;}
 .steps code, .legend code, .sub code{font-family:var(--mono);font-size:0.85em;background:var(--surface-2);padding:0.1em 0.4em;border-radius:4px;}
 .legend{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:24px;max-width:64ch;}
-.legend-title{font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700;margin-bottom:8px;}
-.legend ul{list-style:none;margin:0;padding:0;font-size:0.9rem;line-height:1.5;}
+.legend{padding:0;}
+.legend-title{
+  font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700;
+  padding:14px 16px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+}
+.legend-title::-webkit-details-marker{display:none;}
+.legend-title::before{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s ease;}
+.legend[open] > .legend-title::before{transform:rotate(45deg);}
+.legend-title:hover{color:var(--ink);}
+.legend[open] > .legend-title{padding-bottom:8px;}
+.legend > :not(summary){margin-inline:16px;}
+.legend > :last-child{margin-bottom:16px;}
+.legend ul{list-style:none;margin:0 16px;padding:0;font-size:0.9rem;line-height:1.5;}
 .legend li{margin-bottom:8px;}
 .legend li:last-child{margin-bottom:0;}
 .legend abbr{text-decoration:underline dotted;cursor:help;}
+.agent-help .agent-line{margin:0 16px 8px;font-size:0.9rem;}
+.agent-help .agent-line:last-child{margin-bottom:16px;}
+.agent-help a{color:var(--accent);font-weight:700;}
+.agent-prompt{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.agent-prompt code{flex:1 1 280px;font-family:var(--mono);font-size:0.82rem;line-height:1.5;background:var(--surface-2);padding:8px 10px;border-radius:8px;overflow-wrap:anywhere;}
 .tagline code, .cell-id, code.opt{font-family:var(--mono);font-size:0.85em;background:var(--surface-2);padding:0.1em 0.4em;border-radius:4px;}
 
 .dropzones{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
@@ -219,14 +235,23 @@ dialog#solution-dialog::backdrop{background:rgba(0,0,0,.45);}
   <li>Drop the source zip and the destination zip below.</li>
   <li>Fix anything marked red or amber, then import.</li>
 </ol>
-<div class="legend">
-  <div class="legend-title">What the warnings mean</div>
+<details class="legend">
+  <summary class="legend-title">What the warnings mean</summary>
   <ul>
     <li><span class="pill collide">Name clash</span> Same name, different <abbr title="Elementor's hidden reference for a class or variable, like e-gv-4204356. Not a CSS id.">internal ID</abbr>. Import keeps the destination's item. Copied elements lose their styling, with no error.</li>
     <li><span class="pill risk">Indirect risk</span> The class is fine, but it uses a variable that clashes.</li>
     <li><span class="pill diff">Value differs</span> Same name, different values. Elementor only asks <code class="opt">Replace existing values</code> or <code class="opt">Keep existing values</code>. It never shows you what changes.</li>
   </ul>
-</div>
+</details>
+<details class="legend agent-help">
+  <summary class="legend-title">Stuck or confused? Ask your AI</summary>
+  <p class="agent-line">Tell your AI agent:</p>
+  <div class="agent-prompt">
+    <code id="agent-prompt-text">Read https://elementor-v4-design-diff.netlify.app/agents.md, then help me with my Elementor v4 design system problem.</code>
+    <button id="agent-copy" class="sol-btn" type="button">Copy</button>
+  </div>
+  <p class="agent-line">Prefer to read it yourself? <a href="https://elementor-v4-design-diff.netlify.app/agents.md" target="_blank" rel="noopener">Open agents.md</a></p>
+</details>
 
 <div class="dropzones">
   <label class="dropzone" id="dz-source">
@@ -852,6 +877,25 @@ function runElementCheck(){
     </div>
   `).join('');
 }
+
+// One-click copy for the "tell your agent" prompt. Falls back to selecting the text
+// if the browser blocks clipboard access (e.g. some file:// setups).
+document.getElementById('agent-copy').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  const text = document.getElementById('agent-prompt-text').textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied';
+  } catch (err) {
+    const range = document.createRange();
+    range.selectNodeContents(document.getElementById('agent-prompt-text'));
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    btn.textContent = 'Press Ctrl/Cmd+C';
+  }
+  setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+});
 
 computeAndRender();
 </script>
